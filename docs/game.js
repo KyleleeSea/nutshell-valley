@@ -300,7 +300,7 @@ function update(dt) {
     const k = Math.min(1, dt * 10); sq.rx += (sq.x - sq.rx) * k; sq.ry += (sq.y - sq.ry) * k; sq.animT = (sq.animT || 0) + dt;
   }
   for (const p of S.particles) p.t += dt; S.particles = S.particles.filter(p => p.t < 1.8);
-  computeHover();
+  if ($('menu').classList.contains('hidden')) computeHover(); // keep the highlighted target steady while a menu is open
 }
 function draw(t) {
   const c = ctx; c.clearRect(0, 0, W, H);
@@ -554,10 +554,11 @@ function onClick(mx, my) {
     return;
   }
   if (S.hover.obj) {
-    const def = OBJECTS[S.hover.obj.type];
+    const obj = S.hover.obj; // capture now: the hover target changes as the mouse moves onto the menu
+    const def = OBJECTS[obj.type];
     if (def.actions.length) {
-      const items = def.actions.map(a => ({ label: a.label, emoji: a.emoji, cost: a.cost, earn: a.acorns ? `+${Math.round(a.acorns.base)}–${Math.round(a.acorns.base + a.acorns.rand)} 🌰` : null, run: () => send({ t: 'interact', objId: S.hover.obj.id, actionId: a.id }) }));
-      const users = [...S.sqs.values()].filter(s => s.act && s.act.objId === S.hover.obj.id);
+      const items = def.actions.map(a => ({ label: a.label, emoji: a.emoji, cost: a.cost, earn: a.acorns ? `+${Math.round(a.acorns.base)}–${Math.round(a.acorns.base + a.acorns.rand)} 🌰` : null, run: () => send({ t: 'interact', objId: obj.id, actionId: a.id }) }));
+      const users = [...S.sqs.values()].filter(s => s.act && s.act.objId === obj.id);
       openMenu(mx, my, def.name + (users.length ? ` · ${users.map(u => u.name).join(', ')}` : ''), items); return;
     }
   }
