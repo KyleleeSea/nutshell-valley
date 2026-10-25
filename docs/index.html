@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nutshell Valley</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div id="chat" class="panel">
+    <div class="panelTitle">Den chat · <span id="roomName"></span></div>
+    <div id="chatLog"></div>
+    <form id="chatForm" autocomplete="off"><input id="chatInput" maxlength="140" placeholder="Say something… (Enter)"></form>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="menu" class="hidden"></div>
+  <div id="status" class="hidden">Connecting…</div>
+
+  <div id="catalog" class="panel hidden">
+    <div id="catTabs"></div>
+    <div id="catItems"></div>
+    <div id="catHint" class="hint"></div>
+  </div>
+
+  <div id="bottom">
+    <div class="modes">
+      <button id="liveBtn" class="modeBtn active" title="Live mode (L)"><span>▶</span>Live</button>
+      <button id="buyBtn" class="modeBtn" title="Buy mode (U)"><span>🛋️</span>Buy</button>
+      <button id="buildBtn" class="modeBtn" title="Build mode (B)"><span>🔨</span>Build</button>
+    </div>
+
+    <div class="info">
+      <div id="household" class="hh">The den</div>
+      <div class="clockRow"><span id="clock">8:00 AM</span><span id="dayLabel" class="dim">Day 1</span></div>
+      <div class="money"><span class="sym">🌰</span><span id="acorns">0</span></div>
+      <div class="bondRow" title="How close your two squirrels are"><span>💞</span><div class="bondBar"><div id="bondFill"></div></div></div>
+      <div id="bondLabel" class="dim">Strangers</div>
+      <div id="netBadge" class="dim small">P2P · connecting…</div>
+    </div>
+
+    <div class="sq me">
+      <div class="portraitWrap"><canvas class="portrait" id="mePortrait" width="76" height="76"></canvas><i id="plumbobIcon" class="plumbob"></i></div>
+      <div class="sqMain">
+        <div class="sqHead"><span class="name" id="meName">…</span><span class="mood" id="meMood"></span><button id="editMe" class="tiny" title="Change appearance">✎</button><button id="findMe" class="tiny" title="Find me (F)">◎</button></div>
+        <div class="doing" id="meDoing"></div>
+        <div class="needs" id="meNeeds"></div>
+      </div>
+    </div>
+
+    <div class="sq partner">
+      <div id="partnerWait">
+        <div class="waitTitle">Waiting for your den-mate</div>
+        <div class="dim small">This den fits exactly two squirrels. Send the link and they move in beside you.</div>
+        <div class="code">Den: <b id="roomCode"></b></div>
+        <button id="inviteBtn2" class="btn">Copy invite link</button>
+      </div>
+      <div id="partnerBody" class="hidden">
+        <div class="portraitWrap"><canvas class="portrait" id="partnerPortrait" width="64" height="64"></canvas></div>
+        <div class="sqMain">
+          <div class="sqHead"><span class="name" id="partnerName"></span><span class="mood" id="partnerMood"></span><button id="findPartner" class="tiny" title="Find them">◎</button></div>
+          <div class="doing" id="partnerDoing"></div>
+          <div class="needs thin" id="partnerNeeds"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="options">
+      <div class="skills" id="meSkills"></div>
+      <label class="fw"><input type="checkbox" id="freeWill" checked> Free will</label>
+      <button id="wallsBtn" class="btn">🧱 Walls: cutaway</button>
+      <button id="inviteBtn" class="btn">🔗 Invite link</button>
+    </div>
+  </div>
+</div>
+
+<div id="cas" class="modal">
+  <div class="modalCard">
+    <h1>Create a Squirrel</h1>
+    <p class="dim sub">Nutshell Valley is a life sim for <b>two</b>. Make your squirrel, name your den, and share the link with one friend.</p>
+    <div class="casBody">
+      <canvas id="casPreview" width="220" height="260"></canvas>
+      <div class="casForm">
+        <label>Name <input id="casName" maxlength="16"></label>
+        <div class="lbl">Fur</div><div id="casFur" class="swatches"></div>
+        <div class="lbl">Tail</div><div id="casTail" class="chips"></div>
+        <div class="lbl">Accessory</div><div id="casAcc" class="chips"></div>
+        <label>Den name <input id="casRoom" maxlength="24" placeholder="oakhaven"></label>
+        <div id="casError" class="err hidden"></div>
+        <button id="casGo" class="btn primary">Move in!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="defs.js"></script>
+<script src="sim.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

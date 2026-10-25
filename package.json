@@ -1,0 +1,9 @@
+{
+  "name": "nutshell-valley",
+  "version": "2.0.0",
+  "description": "A Sims-style peer-to-peer life sim for two, where everyone is a squirrel.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}
