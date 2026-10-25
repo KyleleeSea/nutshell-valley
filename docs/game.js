@@ -674,7 +674,7 @@ for (const id of ['inviteBtn', 'inviteBtn2']) $(id).onclick = async () => { try 
 // The first player to open a den claims the peer id for that den and hosts the simulation in their tab.
 // The second player's claim fails ("id taken"), so they connect to the host as a guest.
 const PEER_PREFIX = 'nutshell-valley-';
-const PEER_OPTS = { debug: 1 };
+const PEER_OPTS = { debug: 0 };
 const denKey = () => 'nv_den_' + S.room;
 let net = null, peer = null, hostRoom = null, last = null, retryTimer = null;
 function send(msg) { if (net) net.send(msg); }
