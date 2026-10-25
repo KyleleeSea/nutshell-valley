@@ -75,6 +75,8 @@ class Room {
       this.nextObjId = d.nextObjId || 1;
       this.time = d.time ?? this.time; this.day = d.day ?? 1;
       this.acorns = d.acorns ?? this.acorns; this.bond = d.bond ?? this.bond;
+      const ex = [...this.objects.values()].find(o => o.type === 'exchange' && o.fixed && o.x === 20 && o.y === 13);
+      if (ex && this.canPlace('exchange', 14, 3, 0)) { ex.x = 14; ex.y = 3; this.dirty = true; }
     } catch { /* fresh room */ }
   }
 
@@ -609,6 +611,7 @@ class Room {
       if (a.acorns) {
         const n = typeof a.acorns === 'number' ? a.acorns : Math.round(a.acorns.base + a.acorns.perSkill * (sq.skills[a.skill] || 0) + Math.random() * a.acorns.rand);
         this.acorns += n; this.fx(sq, `+${n} 🌰`);
+        this.broadcast({ t: 'toast', text: `💰 ${sq.name} earned ${n} acorns (${a.label.toLowerCase()}). Den wallet: ${this.acorns} 🌰` });
       } else this.fx(sq, a.emoji);
       if (a.skill) this.gainSkill(sq, a.skill, a.skillAmt || 0.34);
     } else if (a.kind === 'social') {

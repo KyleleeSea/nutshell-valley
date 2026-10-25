@@ -91,6 +91,9 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #223d25; fon
 #menu button { display: flex; width: 100%; justify-content: space-between; gap: 10px; font: inherit; font-size: 13px; font-weight: 700; border: 0; background: transparent; padding: 6px 8px; border-radius: 6px; cursor: pointer; text-align: left; color: var(--text); }
 #menu button:hover { background: rgba(53,211,87,.25); }
 #menu .cost { color: var(--gold); }
+#menu .earn { color: var(--green); }
+.money.pulse { animation: walletPulse .7s ease-out; }
+@keyframes walletPulse { 0% { transform: scale(1.18); background: rgba(53,211,87,.45); } 100% { transform: scale(1); } }
 #status { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); background: var(--panel); border: 2px solid var(--edge); color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 800; }
 
 /* ---- Create a Squirrel ---- */

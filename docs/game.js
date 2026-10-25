@@ -29,7 +29,7 @@ const wkey = (x, y, side) => x + ',' + y + ',' + side;
 // ---------- geometry ----------
 const toScreen = (wx, wy) => ({ x: (wx - wy) * TW / 2 * cam.zoom + cam.x, y: (wx + wy) * TH / 2 * cam.zoom + cam.y });
 function toWorld(sx, sy) { const a = (sx - cam.x) / (TW / 2 * cam.zoom), b = (sy - cam.y) / (TH / 2 * cam.zoom); return { x: (a + b) / 2, y: (b - a) / 2 }; }
-function centerOn(wx, wy) { cam.x = W / 2 - (wx - wy) * TW / 2 * cam.zoom; cam.y = H / 2 - 60 - (wx + wy) * TH / 2 * cam.zoom; }
+function centerOn(wx, wy) { cam.x = W / 2 - (wx - wy) * TW / 2 * cam.zoom; cam.y = H / 2 - 80 - (wx + wy) * TH / 2 * cam.zoom; }
 function fp(o) { const d = OBJECTS[o.type]; return { w: o.rot % 2 ? d.h : d.w, h: o.rot % 2 ? d.w : d.h }; }
 const iso = (x, y) => ({ x: (x - y) * 32, y: (x + y) * 16 }); // base-unit iso (zoom applied by ctx)
 function resize() {
@@ -556,7 +556,7 @@ function onClick(mx, my) {
   if (S.hover.obj) {
     const def = OBJECTS[S.hover.obj.type];
     if (def.actions.length) {
-      const items = def.actions.map(a => ({ label: a.label, emoji: a.emoji, cost: a.cost, run: () => send({ t: 'interact', objId: S.hover.obj.id, actionId: a.id }) }));
+      const items = def.actions.map(a => ({ label: a.label, emoji: a.emoji, cost: a.cost, earn: a.acorns ? `+${Math.round(a.acorns.base)}–${Math.round(a.acorns.base + a.acorns.rand)} 🌰` : null, run: () => send({ t: 'interact', objId: S.hover.obj.id, actionId: a.id }) }));
       const users = [...S.sqs.values()].filter(s => s.act && s.act.objId === S.hover.obj.id);
       openMenu(mx, my, def.name + (users.length ? ` · ${users.map(u => u.name).join(', ')}` : ''), items); return;
     }
@@ -567,7 +567,7 @@ function onClick(mx, my) {
 // ---------- menu / toasts / chat ----------
 function openMenu(x, y, title, items) {
   const m = $('menu'); m.innerHTML = ''; const h = document.createElement('div'); h.className = 'title'; h.textContent = title; m.appendChild(h);
-  for (const it of items) { const b = document.createElement('button'); b.innerHTML = `<span>${it.emoji || ''} ${it.label}</span>` + (it.cost ? `<span class="cost">${it.cost} 🌰</span>` : ''); b.onclick = () => { closeMenu(); it.run(); }; m.appendChild(b); }
+  for (const it of items) { const b = document.createElement('button'); b.innerHTML = `<span>${it.emoji || ''} ${it.label}</span>` + (it.cost ? `<span class="cost">${it.cost} 🌰</span>` : it.earn ? `<span class="earn">${it.earn}</span>` : ''); b.onclick = () => { closeMenu(); it.run(); }; m.appendChild(b); }
   m.classList.remove('hidden'); const r = m.getBoundingClientRect(); m.style.left = clamp(x + 8, 4, W - r.width - 4) + 'px'; m.style.top = clamp(y - 10, 4, H - r.height - 4) + 'px';
 }
 function closeMenu() { $('menu').classList.add('hidden'); }
@@ -650,7 +650,8 @@ function drawPortrait(cv, sq, t) { const c = cv.getContext('2d'); c.clearRect(0,
 function updateHUD() {
   const me = S.sqs.get(S.meId); if (!me) return;
   const partner = [...S.sqs.values()].find(s => s.id !== S.meId);
-  $('clock').textContent = fmtClock(S.time); $('dayLabel').textContent = `Day ${S.day}`; $('acorns').textContent = S.acorns.toLocaleString();
+  $('clock').textContent = fmtClock(S.time); $('dayLabel').textContent = `Day ${S.day}`;
+  if ($('acorns').textContent !== S.acorns.toLocaleString()) { $('acorns').textContent = S.acorns.toLocaleString(); const m = $('acorns').parentElement; m.classList.remove('pulse'); void m.offsetWidth; m.classList.add('pulse'); }
   $('bondFill').style.width = S.bond + '%'; $('bondLabel').textContent = S.bondLabel;
   $('household').textContent = partner ? `The ${me.name} & ${partner.name} den` : `The ${me.name} den`;
   $('meName').textContent = me.name; const m = moodOf(me.needs); $('meMood').textContent = moodWord(m); $('meMood').style.color = moodColor(m); $('meDoing').textContent = describe(me); fillNeeds($('meNeeds'), me.needs);
@@ -753,6 +754,7 @@ function handle(m) {
       $('roomName').textContent = m.room; $('roomCode').textContent = m.room; setStatus(null); S.centered = false;
       $('netBadge').textContent = S.isHost ? 'P2P · you are hosting this den' : 'P2P · connected to your den-mate';
       chatLine(`Welcome to the ${m.room} lot. Click the ground to walk, click furniture to use it, click your den-mate to socialise.`, true);
+      chatLine('Earning acorns: work a shift at the Nut Exchange (+40–50), forage at the Great Oak, day-trade on a Nutbook computer, or sell paintings from an easel.', true);
       centerOn(8, 7);
       break;
     case 'state': {

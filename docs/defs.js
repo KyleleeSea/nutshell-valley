@@ -175,7 +175,7 @@
     ['toilet', 3, 9], ['shower', 6, 9], ['sink', 6, 7],
     ['fridge', 10, 3], ['stove', 10, 4], ['counter', 10, 5], ['bookshelf', 7, 3], ['dining', 8, 4],
     ['couch', 7, 8], ['tv', 10, 8], ['floorlamp', 10, 9], ['phone', 7, 7],
-    ['mailbox', 12, 16, true], ['trashcan', 13, 16, true], ['oak', 16, 9, true], ['exchange', 20, 13, true],
+    ['mailbox', 12, 16, true], ['trashcan', 13, 16, true], ['oak', 16, 9, true], ['exchange', 14, 3, true],
     ['bush', 1, 13], ['flowers', 12, 11], ['flowers', 13, 11], ['birdbath', 18, 6], ['lantern', 11, 12], ['rock', 2, 8], ['berrybush', 21, 9],
   ];
 
